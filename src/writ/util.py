@@ -54,6 +54,7 @@ def safezip(
     -----
     It seems that the type hints here do not exactly match those of zip, but it's
     not clear how to fix this.
+
     """
     # holds the iterators from the iterables
     its = [iter(x) for x in args]
@@ -102,6 +103,7 @@ def tappend(tup: Iterable[A], value: A0) -> Tuple[Union[A, A0], ...]:
     Returns:
     -------
     Tuple containing the elements of tup and value as the last element.
+
     """
     l_form: List[Union[A, A0]] = list(tup)
     l_form.append(value)
@@ -144,6 +146,7 @@ def chunker(
     h5py.Datasets) change types under this operation. The combined chunking
     and striding is in fact most useful for h5py.Datasets, as striding before
     chunking would cause the entire stride portion to be loaded.
+
     """
     length = len(data)
     # all the frame indices we will serve
@@ -211,6 +214,7 @@ def perframe(
     This function can be used to change the default per-chunk iteration done in a
     SchemaH5 object into a per-frame iteration (perframe(SchemaH5(file,keys))).
     If include_id is specified, make sure the mask excludes the id variable.
+
     """
     count = 0
     for pull in source:
@@ -243,6 +247,7 @@ def tupleize(data: Mapping[T, A], keys: Iterable[T]) -> Tuple[A, ...]:
     Returns:
     -------
     Tuple of values.
+
     """
     to_return = []
     for key in keys:
@@ -262,6 +267,7 @@ def natural_sort(name: Union[Collection[str], str]) -> List[str]:
     -------
     A sorted version of the input, where order is determined by convert as applied to
     each chunk of name, chunks delimited via re ([0-9]+).
+
     """
     # it is unclear how this could ever encounter a digit based on the following
     # usage

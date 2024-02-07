@@ -45,6 +45,7 @@ class SentinelThreader(Generic[A]):
     sentinel:
         The value which is used by the thread to mark the end of the iteration.
         Cannot be normally served by source.
+
     """
 
     def __init__(
@@ -74,7 +75,9 @@ class SentinelThreader(Generic[A]):
             we raise an ValueError in the thread, although this probably does not
             get propagated back to the main thread.
         defer:
-            If truthy, we
+            If truthy, we try to yield right after reading the output of the thread each
+            time.
+
         """
         self.cache_size = cache_size
         assert iter(source)
@@ -116,7 +119,8 @@ class SentinelThreader(Generic[A]):
             # attempt read, check for sentinel.
             g = q.get()
             # defer thread control if possible.
-            time.sleep(0)
+            if self.defer:
+                time.sleep(0)
             if g is self.sentinel:
                 break
             try:

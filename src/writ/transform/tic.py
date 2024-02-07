@@ -26,6 +26,7 @@ class TICWindow:
 
     Note that .fit() can be called with an argument to train on a difference
     source of data.
+
     """
 
     def __init__(
@@ -135,6 +136,7 @@ def distances(
         return_matrix must be true, and a 4 dimensional array is returned,
         similar to the shapes above but with an additional terminal axis for
         dimension.
+
     """
     if cross_xyz is not None and not return_matrix:
         raise ValueError("Cross distances only supported when return_matrix is truthy.")

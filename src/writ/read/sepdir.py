@@ -56,6 +56,7 @@ def filename_tags(
     -------
     List of labels from files in the current directory fitting the criteria. May be a
     list of size zero.
+
     """
     # Check to see if exactly one {} is present
     pieces = pattern.split(wc_pattern)
@@ -154,6 +155,7 @@ class SepDirChunks:
         Returns:
         -------
         None
+
         """
         if len(patterns) == 0:
             raise ValueError("Must specify at least 1 pattern.")

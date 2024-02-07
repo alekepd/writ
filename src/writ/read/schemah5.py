@@ -50,6 +50,7 @@ def data_anchors(dataset: h5py.Group, separator: str = "/") -> Set[Tuple[str, ..
     Returns:
     -------
     A set of all the locations (str) of groups of data.
+
     """
     record = set()
 
@@ -77,6 +78,7 @@ def _flush_items(data: Mapping[T, Any]) -> Dict[T, Any]:
     Returns:
     -------
     A dictionary with [:] applied to each member.
+
     """
     transformed = {}
     for key in data:
@@ -102,6 +104,7 @@ def _flush_tuple(data: Iterable[E]) -> Tuple[Any, ...]:
     Returns:
     -------
     A tuple with [:] applied to each member.
+
     """
     flushed = []
     for value in data:
@@ -207,6 +210,7 @@ class SchemaH5(Iterable):
     g = SchemaH5("file.h5py",schema=[])
 
     Additional init options may be used to tweak behavior.
+
     """
 
     SEPARATOR: Final = "/"
@@ -256,6 +260,7 @@ class SchemaH5(Iterable):
             If true, then if only one field is to be returned at each iteration, it is
             not wrapped in a tuple. This enables simpler loop syntax. If false, it is
             still wrapped in a size 1 tuple.
+
         """
         self.strict = strict
         self.transform = transform

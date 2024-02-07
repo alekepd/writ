@@ -21,6 +21,7 @@ from ..util import chunker, safezip
 
 It = TypeVar("It", bound=Iterable)
 
+
 class Breaker(Iterable[It]):
     """Break down Tuples of Collections which exceed a given size.
 
@@ -71,6 +72,7 @@ class Breaker(Iterable[It]):
             implies an entry should be chunked, False implies it should not. If not
             chunked, that element is repeated for each chunk served. None corresponds
             to a mask of all True.
+
         """
         self.source = source
         self.chunk_size = chunk_size
@@ -98,5 +100,3 @@ class Breaker(Iterable[It]):
             # iterated along chunker output
             for chunk in safezip(*iterables, mask=self.mask):
                 yield chunk  # type: ignore   # mypy doesn't understand safezip
-
-

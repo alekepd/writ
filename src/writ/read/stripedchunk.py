@@ -52,6 +52,7 @@ class StripedChunks(Iterable[np.ndarray]):
             Amount by which to stride the data.
         loader:
             Callable which takes a filename as input and returns a numpy ndarray.
+
         """
         self.pattern = pattern
         self.stride = stride
