@@ -67,7 +67,7 @@ not allow it.
 
 Data may also be stored on disk in multiple directories, where numpy files are present in 
 both directories and paired together. Pairing is done by considering the pattern provided:
-`{}` is treated like a wildcard, with its expanded value considered an id. The id of any pair
+`{}` is treated like a wildcard, with its expanded value considered an ID. The ID of any pair
 of files served matches.
 ```python
 from writ.read import SepDirChunks 
@@ -79,4 +79,20 @@ for x,y in s:
     # each y contains the forces of a chunk
     print(x.shape)
     print(y.shape)
+```
+
+There is also code for basic analysis, such as time independent coordinate analysis (to see
+this object, you need to have installed `deeptime`).
+```python
+from writ.transform.tic import TICWindow
+from writ.read import StripedChunks
+filename_glob = 'data/ca_aaqaa_coords_*.npy'
+s = StripedChunks(filename_glob)
+t = TICWindow(source=s)
+# fit the tic transform on source. If you want to fit on a different source (maybe stride),
+# pass it to this .fit(*) call.
+t.fit() #
+for x in tic:
+    # each x is a trajectory mapped to tic space.
+    print(x.shape)
 ```
