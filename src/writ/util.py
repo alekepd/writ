@@ -9,9 +9,12 @@ from typing import (
     Collection,
     Mapping,
     Hashable,
+    Literal,
     Union,
     Optional,
     TypeVar,
+    cast,
+    overload,
 )
 from itertools import repeat, count
 import re
@@ -306,6 +309,79 @@ def gcycle(target: Iterable[A], times: Optional[int] = None) -> Iterable[A]:
         for _ in range(times):
             for x in target:
                 yield x
+
+
+@overload
+def merged_array(
+    source: Iterable[Tuple[np.ndarray, Any]],
+    id: Literal[True],
+) -> Tuple[np.ndarray, List[slice], List[Any]]:
+    ...
+
+
+@overload
+def merged_array(
+    source: Iterable[np.ndarray],
+    id: Literal[False],
+) -> Tuple[np.ndarray, List[slice]]:
+    ...
+
+
+@overload
+def merged_array(
+    source: Iterable[np.ndarray],
+    id: Literal[False] = ...,
+) -> Tuple[np.ndarray, List[slice]]:
+    ...
+
+
+def merged_array(
+    source: Union[Iterable[np.ndarray], Iterable[Tuple[np.ndarray, Any]]],
+    id: bool = False,
+) -> Union[Tuple[np.ndarray, List[slice]], Tuple[np.ndarray, List[slice], List[Any]]]:
+    """Combine iterable of arrays into single array with slices identifying parts.
+
+    Arguments:
+    ---------
+    source:
+        Iterable to draw from. If id is false, should return np.ndarrays. If id is true,
+        should return a tuple with the first element an np.ndarray and the second
+        element an object to view as the "identity" of the array.
+    id:
+        See target.
+
+    Returns:
+    -------
+    If id is truthy, we return a 3 item tuple. First element is the concatenated array,
+    second element is a list of slices which, when used to index the first element,
+    return the contents of the individual pulls from source, and the third element
+    is the list of the names served by source. If id is falsy we return a tuple of
+    the first two of these elements.
+
+    """
+    if id:
+        ids: Optional[List[Any]] = []
+        arrays: List[np.ndarray] = []
+        for data, label in source:
+            arrays.append(data)
+            ids.append(label)  # type: ignore # mypy can't see that ids is a list here
+    else:
+        arrays = cast(List[np.ndarray], list(source))
+        ids = None
+    full_array = cast(np.ndarray, np.concatenate(arrays, axis=0))
+
+    slices: List[slice] = []
+    place = 0
+    for length in (len(x) for x in arrays):
+        offset = place + length
+        slices.append(slice(place, offset))
+        place = offset
+
+    # condition on ids not id to make mypy clear
+    if ids is None:
+        return (full_array, slices)
+    else:
+        return (full_array, slices, ids)
 
 
 class TupleStrider:
