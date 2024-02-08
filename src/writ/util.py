@@ -1,7 +1,4 @@
-"""Basic tools used elsewhere in the package.
-
-There are many modifiers here. Some are 
-"""
+"""Basic tools used elsewhere in the package."""
 from typing import (
     Any,
     Tuple,
@@ -278,6 +275,37 @@ def natural_sort(name: Union[Collection[str], str]) -> List[str]:
         return [convert(c) for c in re.split("([0-9]+)", key)]
 
     return sorted(name, key=alphanum_key)
+
+
+def gcycle(target: Iterable[A], times: Optional[int] = None) -> Iterable[A]:
+    """Return generator that repeatedly iterates over iterable.
+
+    E.g. [ 1, 2 ] -> [ 1, 2, 1, 2 ] (as a generator).
+
+    Note that the default behavior is infinite iteration. Differs from the standard
+    library in that values are not cached.
+
+    Arguments:
+    ---------
+    target:
+        Iterable to draw from. Must be able to iterated multiple times!
+
+    times:
+        Number of times to repeat. If None, infinite iteration.
+
+    Returns:
+    -------
+    Generator serving repeated values
+
+    """
+    if times is None:
+        while True:
+            for x in target:
+                yield x
+    else:
+        for _ in range(times):
+            for x in target:
+                yield x
 
 
 class TupleStrider:
