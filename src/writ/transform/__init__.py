@@ -2,6 +2,8 @@
 # __init__ doesn't use the imported objects
 # ruff: noqa: F401
 from .breaker import Breaker
+from .filter import Filter
+from .prefetch import Prefetch, lazy_batched
 
 # in case deeptime not installed
 try:
