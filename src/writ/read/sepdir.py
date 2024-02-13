@@ -190,7 +190,7 @@ class SepDirChunks:
             datas = tuple(self.loader(x) for x in filenames)
             transformed = self.transform(datas)
             if self.include_id:
-                ready = util.tappend(transformed, filenames)
+                ready = util.tuple_append(transformed, filenames)
             else:
                 ready = transformed
             if self.singleton and len(ready) == 1:

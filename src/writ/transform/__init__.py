@@ -4,6 +4,8 @@
 from .breaker import Breaker
 from .filter import Filter
 from .prefetch import Prefetch, lazy_batched
+from .extend import Extender
+from .rejection import RSampler
 
 # in case deeptime not installed
 try:

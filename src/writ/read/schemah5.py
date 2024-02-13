@@ -310,7 +310,7 @@ class SchemaH5(Iterable):
                 continue
             new_data = self.transform(util.tupleize(data, self.schema))
             if self.include_id:
-                new_data = util.tappend(new_data, anchor)
+                new_data = util.tuple_append(new_data, anchor)
             if len(new_data) == 1 and self.singleton:
                 yield new_data[0]
             else:
