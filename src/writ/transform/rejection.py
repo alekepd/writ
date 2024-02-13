@@ -2,6 +2,9 @@
 
 Look at `en.wikipedia.org/wiki/Rejection_sampling` for more information.
 
+Note that implementations may not preserve contiguity in the served chunks.
+Attempting so would likely create a massive number of tiny iterates.
+
 Functionality is provided via RSampler; note that this object performs
 sampling on the slices of the input objects (i.e., it does not keep or drop
 each iterate as a single item).
@@ -145,6 +148,9 @@ class RSampler(Generic[S]):
     -------
     Sampled entries need to support boolean mask indexing. For example:
         g[ np.ndarray(True, False, False) ]
+
+    Note that this objects serves iterates which are likely no longer
+    contiguous, as individual entries along the leading access are dropped.
 
     The listed attributes can be modified during runtime to change behavior.
 
