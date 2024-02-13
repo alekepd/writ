@@ -50,6 +50,7 @@ def _callable_mapping(mapping: Mapping[A, A0]) -> Callable[[A], A0]:
     Returns:
     -------
     A function that evaluates the mapping via indexing.
+
     """
 
     def _eval(argument: A, /) -> A0:
@@ -80,6 +81,7 @@ class Extender(Generic[A, A0]):
     placement_index:
         Indexing the tuple served via iteration by this value will return the added
         content.
+
     """
 
     def __init__(
@@ -114,6 +116,7 @@ class Extender(Generic[A, A0]):
         placement_index:
             Where to place the generated value in the tuple: the value is found
             where this index points on the produced tuple.
+
         """
         self.source = source
         self.input_index = input_index

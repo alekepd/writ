@@ -47,6 +47,7 @@ def _indices_to_mask(indices: Optional[Collection[int]], max_size: int) -> List[
     Returns:
     -------
     List of booleans, True if the corresponding
+
     """
     if indices is None:
         return [True for _ in range(max_size)]
@@ -100,6 +101,7 @@ def mapping_scale(
     -----
     This function is type hinted in a restrictive way--- as long as local_max
     works on the elements of content and they can be divided, it will work.
+
     """
     keys, values = zip(*content.items())
     maximum = max([local_max(x) for x in values])
@@ -164,6 +166,7 @@ class RSampler(Generic[S]):
     drop_empty:
         If true, if we will serve only empty items in a iterate, we will skip serving
         that iterate.
+
     """
 
     # numerical tolerance for checking to see if number exceeds maximum
@@ -257,6 +260,7 @@ class RSampler(Generic[S]):
         -----
         If self.check_bound is True, this function will raise a ValueError if it finds
         a weight bigger than 1.
+
         """
         if self.check_bound:
             if ratios.max() > 1 + self._tol:
