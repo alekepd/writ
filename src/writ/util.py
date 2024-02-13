@@ -132,8 +132,14 @@ def tuple_insert(
     -------
     Tuple containing the elements of tup with value added.
 
+    Notes:
+    -----
+    This call works differently than list.insert for indices less than 0.
+
     """
     l_form: List[Union[A, A0]] = list(tup)
+    if position < 0:
+        position = len(l_form) + position + 1
     l_form.insert(position, value)
     return tuple(l_form)
 
