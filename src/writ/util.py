@@ -87,7 +87,7 @@ def safezip(
             return
 
 
-def tappend(tup: Iterable[A], value: A0) -> Tuple[Union[A, A0], ...]:
+def tuple_append(tup: Iterable[A], value: A0, /) -> Tuple[Union[A, A0], ...]:
     """'Append' value to tuple.
 
     Tuples are immutable, so make a new tuple that adds the given value at the end.
@@ -107,6 +107,56 @@ def tappend(tup: Iterable[A], value: A0) -> Tuple[Union[A, A0], ...]:
     """
     l_form: List[Union[A, A0]] = list(tup)
     l_form.append(value)
+    return tuple(l_form)
+
+
+def tuple_insert(
+    tup: Iterable[A], value: A0, position: int, /
+) -> Tuple[Union[A, A0], ...]:
+    """'Insert' value into tuple.
+
+    Tuples are immutable, so make a new tuple has the value inserted at a given
+    position.
+
+    Arguments:
+    ---------
+    tup:
+        Iterable (probably a tuple) to transform into a tuple with the same elements
+        and "value" at the given position.
+    value:
+        Value to insert.
+    position:
+        Index that will return added value in returned tuple.
+
+    Returns:
+    -------
+    Tuple containing the elements of tup with value added.
+
+    """
+    l_form: List[Union[A, A0]] = list(tup)
+    l_form.insert(position, value)
+    return tuple(l_form)
+
+
+def tuple_remove(tup: Iterable[A], position: int, /) -> Tuple[A, ...]:
+    """'Remove' value from tuple by index.
+
+    Tuples are immutable, so make a new tuple has the value at a given position removed.
+
+    Arguments:
+    ---------
+    tup:
+        Iterable (probably a tuple) to transform into a tuple with a value removed.
+    position:
+        Index of value to remove.
+
+    Returns:
+    -------
+    Tuple containing the elements of tup with the given value removed.
+
+    """
+    l_form = list(tup)
+    del l_form[position]
     return tuple(l_form)
 
 
