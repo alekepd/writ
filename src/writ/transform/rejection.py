@@ -14,7 +14,6 @@ from typing import (
     Generic,
     TypeVar,
     Union,
-    List,
     Collection,
     Optional,
     Sequence,
@@ -29,33 +28,7 @@ from typing import (
 from numpy.random import default_rng, Generator
 from numpy import ndarray, finfo
 from numbers import Real
-from ..util import tuple_remove, safezip
-
-
-def _indices_to_mask(indices: Optional[Collection[int]], max_size: int) -> List[bool]:
-    """Create a list of booleans that indicate presence in given indices.
-
-    For example, _indices_to_mask([1,2],5) gives [False, True, True, False, False].
-    The length of the list is 5 due to the max_size argument.
-
-    Arguments:
-    ---------
-    indices:
-        Collection of integers denoting which entries should be "preserved"; may also be
-        None, in which case all indices will be preserved.
-    max_size:
-        Maximum index to consider when making map. If smaller than values in indices,
-        those values are effectively discarded.
-
-    Returns:
-    -------
-    List of booleans, True if the corresponding
-
-    """
-    if indices is None:
-        return [True for _ in range(max_size)]
-    else:
-        return [True if x in indices else False for x in range(max_size)]
+from ..util import tuple_remove, safezip, indices_to_mask
 
 
 A = TypeVar("A")
@@ -233,7 +206,7 @@ class RSampler(Generic[S]):
             if self.discard_weights:
                 pull = tuple_remove(pull, self.weights_index)
             # this mask determines which items in the pull should be sampled.
-            to_include_mask = _indices_to_mask(self.apply_to, len(pull))
+            to_include_mask = indices_to_mask(self.apply_to, len(pull))
             derived = [
                 values[mask] if included else values
                 for values, included in safezip(pull, to_include_mask)
