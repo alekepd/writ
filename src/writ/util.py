@@ -440,6 +440,32 @@ def merged_array(
         return (full_array, slices, ids)
 
 
+def indices_to_mask(indices: Optional[Collection[int]], max_size: int) -> List[bool]:
+    """Create a list of booleans that indicate presence in given indices.
+
+    For example, _indices_to_mask([1,2],5) gives [False, True, True, False, False].
+    The length of the list is 5 due to the max_size argument.
+
+    Arguments:
+    ---------
+    indices:
+        Collection of integers denoting which entries should be "preserved"; may also be
+        None, in which case all indices will be preserved.
+    max_size:
+        Maximum index to consider when making map. If smaller than values in indices,
+        those values are effectively discarded.
+
+    Returns:
+    -------
+    List of booleans, True if the corresponding
+
+    """
+    if indices is None:
+        return [True for _ in range(max_size)]
+    else:
+        return [True if x in indices else False for x in range(max_size)]
+
+
 class TupleStrider:
     """Strides each object in an iterable and returns as tuple.
 
