@@ -24,6 +24,7 @@ from typing import (
     Callable,
     Protocol,
     Tuple,
+    Iterator,
 )
 from numpy.random import default_rng, Generator
 from numpy import ndarray, finfo
@@ -197,7 +198,7 @@ class RSampler(Generic[S]):
         else:
             self._rng = rng
 
-    def __iter__(self) -> Iterable[Tuple]:
+    def __iter__(self) -> Iterator[Tuple]:
         """Pull iterate from source, calculate mask, index, and filter."""
         pull: Union[S, Tuple]
         for pull in self.source:
