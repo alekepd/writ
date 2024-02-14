@@ -5,7 +5,8 @@ A package to write and read array data to and from disk using an iterable interf
 ## Warning
 
 This package is experimental. Interfaces are subject to change and tests are
-far from complete. Use at your own risk.
+far from complete. Use at your own risk. As the package goes through initial 
+changes it will become more clear what the correct interfaces should be.
 
 ## Installation
 
@@ -17,11 +18,20 @@ Note that individual readers or writers may require other libraries (e.g.,
 
 ## Reading and Writing
 
-Interfaces are given for reading data, and interfaces for writing data are
-planned. Note that while the modules are written to clearly state requirements,
-these tools are developed for file formats as they are needed.
+Interfaces are given for reading data, with some tools for writing data
+present.  Note that while the modules are written to clearly state
+requirements, these tools are developed for file formats as they are needed and
+may be specialized for individual domains.
 
-### Example usage
+### Transforms
+
+`writ.transform` contains tools for changing data as it is read. Objects here
+are quickly changing and should be considered at individually. They are written
+to not depend on each other; only dependencies to `writ.util` and external
+packages are allowed. The aim is to allow individual transforms to be
+understood very quickly by python-literate users.
+
+## Example usage
 
 See the individual modules for defiled information on usage. In general, the objects
 in `writ.read` allow one to iterate over either collections of files on disk or iterate
