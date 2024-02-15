@@ -18,13 +18,14 @@ ArrayNx3 = Annotated[npt.NDArray[DType], Literal["N", 3]]
 ArrayMxNx3 = Annotated[npt.NDArray[DType], Literal["M", "N", 3]]
 
 
+#TODO: write tests!
+#TODO: option to use a subset of the atoms to do SVD frame fit 
 class RotateToSVDFrame(Iterable[A]):
     """Provides an iterable that rotates a source configuration into its SVD-frame
     and returns rotated coords and forces.
 
     """
 
-    # TODO: add options for where the coords and forces are in the tuples that we itearte over
     def __init__(
         self,
         source: Iterable[A],
@@ -77,7 +78,6 @@ class RotateToSVDFrame(Iterable[A]):
 
     def __iter__(self) -> Iterator[A]:
         """Iterate over input, returning rotated coords and forces."""
-        # TODO: do we need to check that pull is a tuple (coords, forces)?
         for pull in self.source:
             coords_batch = pull[self.coords_idx]
             forces_batch = pull[self.forces_idx]
