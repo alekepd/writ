@@ -50,6 +50,7 @@ class RotateToSVDFrame(Iterable[A]):
         forces_idx: int
             Index of the forces array in the tuples we iterate over,
             by default 1.
+
         """
         self.source = source
         self.coords_idx = coords_idx
