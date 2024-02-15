@@ -1,3 +1,7 @@
+"""Provides a transform that rotates all molecules into their SVD frame.
+
+The RotateToSVDFrame class provides this functionality.
+"""
 from typing import (
     Iterable,
     Iterator,
@@ -21,9 +25,11 @@ ArrayMxNx3 = Annotated[npt.NDArray[DType], Literal["M", "N", 3]]
 # TODO: write tests!
 # TODO: option to use a subset of the atoms to do SVD frame fit
 class RotateToSVDFrame(Iterable[A]):
-    """Provides an iterable that rotates a source configuration into its SVD-frame
-    and returns rotated coords and forces.
+    """Provides an iterable that rotates a source configuration into its SVD-frame.
 
+    This class returns rotated coords and forces by modifying the respective entries
+    of the iterates in-place. The positions of the coordinates and forces in iterate
+    can be specified at initialization.
     """
 
     def __init__(
@@ -31,7 +37,6 @@ class RotateToSVDFrame(Iterable[A]):
         source: Iterable[A],
         coords_idx: int = 0,
         forces_idx: int = 1,
-        **kwargs,
     ) -> None:
         """Initialize.
 
@@ -45,14 +50,10 @@ class RotateToSVDFrame(Iterable[A]):
         forces_idx: int
             Index of the forces array in the tuples we iterate over,
             by default 1.
-        **kwargs:
-            Stored and passed to rotate at each call.
-
         """
         self.source = source
         self.coords_idx = coords_idx
         self.forces_idx = forces_idx
-        self.aux_args = kwargs
 
     def _rotate(
         self, coords_batch: ArrayMxNx3, forces_batch: ArrayMxNx3
