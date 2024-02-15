@@ -7,6 +7,7 @@ from typing import (
     Iterator,
     TypeVar,
     Annotated,
+    Sequence,
     Literal,
     Tuple,
 )
@@ -34,9 +35,10 @@ class RotateToSVDFrame(Iterable[A]):
 
     def __init__(
         self,
-        source: Iterable[A],
+        source: Iterable[Sequence[A]],
         coords_idx: int = 0,
         forces_idx: int = 1,
+        check_types: bool = True,
     ) -> None:
         """Initialize.
 
@@ -50,11 +52,16 @@ class RotateToSVDFrame(Iterable[A]):
         forces_idx: int
             Index of the forces array in the tuples we iterate over,
             by default 1.
+        check_types: bool
+            Whether we should check if the types and shapes of coordinates
+            and forces match what we expect,
+            by default True.
 
         """
         self.source = source
         self.coords_idx = coords_idx
         self.forces_idx = forces_idx
+        self.check_types = check_types
 
     def _rotate(
         self, coords_batch: ArrayMxNx3, forces_batch: ArrayMxNx3
@@ -66,8 +73,8 @@ class RotateToSVDFrame(Iterable[A]):
             rotated_coords += [c_rot]
             rotated_forces += [f_rot]
         return (
-            np.concatenate(rotated_coords, axis=0),
-            np.concatenate(rotated_forces, axis=0),
+            np.asarray(rotated_coords),
+            np.asarray(rotated_forces),
         )
 
     def _rotate_single_frame(
@@ -85,11 +92,21 @@ class RotateToSVDFrame(Iterable[A]):
             rotated_forces = forces
         return rotated_coords, rotated_forces
 
-    def __iter__(self) -> Iterator[A]:
+    def __iter__(self) -> Iterator[Sequence[A]]:
         """Iterate over input, returning rotated coords and forces."""
         for pull in self.source:
             coords_batch = pull[self.coords_idx]
             forces_batch = pull[self.forces_idx]
+            if self.check_types:
+                assert isinstance(coords_batch, np.ndarray)
+                assert isinstance(forces_batch, np.ndarray)
+                coords_shape = coords_batch.shape
+                forces_shape = forces_batch.shape
+                assert len(coords_shape) == 3
+                assert coords_shape[-1] == 3
+                for dim_c, dim_f in zip(coords_shape, forces_shape):
+                    assert dim_c == dim_f
+
             coords_batch_rot, forces_batch_rot = self._rotate(
                 coords_batch=coords_batch,
                 forces_batch=forces_batch,
