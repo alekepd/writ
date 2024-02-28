@@ -113,7 +113,7 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
         return True
 
     def __iter__(self) -> Iterator[Sequence[A]]:
-        "Iterate over input, returning rotated coords and forces."
+        """Iterate over input, returning rotated coords and forces."""
         for pull in self.source:
             coords_batch = pull[self.coords_idx]
             forces_batch = pull[self.forces_idx]
@@ -127,7 +127,8 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
                     forces_batch=forces_batch,
                 )
                 # repack the pull
-                # NOTE: coords_batch and forces_batch are references to the entries in pull,
+                # NOTE: coords_batch and forces_batch are references to the entries in
+                #       pull,
                 #       we use [:] to reassign to the underlying array directly because
                 #       tuples cant be mutated
                 coords_batch[:] = coords_batch_rot
