@@ -39,7 +39,7 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
         source: Iterable[Sequence[A]],
         coords_idx: int = 0,
         forces_idx: int = 1,
-        atom_stride_for_svd: int = 1,
+        stride_for_svd: int = 1,
     ) -> None:
         """Initialize.
 
@@ -53,17 +53,17 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
         forces_idx: int
             Index of the forces array in the tuples we iterate over,
             by default 1.
-        atom_stride_for_svd: int
+        stride_for_svd: int
             Stride to use when choosing atoms for SVD fit,
             by default 1.
-            Note that if the stride would result in using less than 3 atoms,
+            Note that if the stride would result in using less than 3 particles,
             we will fallback to a stride of 1.
 
         """
         self.source = source
         self.coords_idx = coords_idx
         self.forces_idx = forces_idx
-        self.atom_stride_for_svd = atom_stride_for_svd
+        self.stride_for_svd = stride_for_svd
 
     def _rotate(
         self, coords_batch: ArrayMxNx3, forces_batch: ArrayMxNx3
@@ -82,11 +82,13 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
     def _rotate_single_frame(
         self, coords: ArrayNx3, forces: ArrayNx3
     ) -> Tuple[ArrayNx3, ArrayNx3]:
+        # center the molecule around the mean
+        coords = coords - coords.mean(0)
         # need at least 3 atoms to compute SVD frame
-        if coords.shape[0] // self.atom_stride_for_svd < 3:
+        if coords.shape[0] // self.stride_for_svd < 3:
             coords_subset = coords
         else:
-            coords_subset = coords[:: self.atom_stride_for_svd]
+            coords_subset = coords[:: self.stride_for_svd]
         # (again) make sure we have enough atoms to calculate svd frame
         if coords_subset.shape[0] > 2:
             U, S, Vh = np.linalg.svd(
@@ -94,8 +96,8 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
             )
             V = Vh.T
             # NOTE: np.matmul is slower than mat1 @ mat2...
-            rotated_coords = coords @ V  # np.matmul(coords, Vh.T)
-            rotated_forces = forces @ V  # np.matmul(forces, Vh.T)
+            rotated_coords = coords @ V  # np.matmul(coords, V)
+            rotated_forces = forces @ V  # np.matmul(forces, V)
         else:
             rotated_coords = coords
             rotated_forces = forces
