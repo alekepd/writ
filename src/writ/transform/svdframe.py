@@ -28,13 +28,14 @@ ArrayMxNx3 = Annotated[npt.NDArray[DType], Literal["M", "N", 3]]
 class RotateToSVDFrame(Iterable[Sequence[A]]):
     """Provides an iterable that rotates a source configuration into its SVD-frame.
 
-    Warning:
-    --------
+    Warning
+    -------
     This class modifies the source iterate tuples in-place.
 
     This class returns rotated coords and forces by modifying the respective entries
     of the iterates in-place. The positions of the coordinates and forces in iterate
     can be specified at initialization.
+
     """
 
     def __init__(
@@ -118,7 +119,8 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
         for dim_idx, (dim_c, dim_f) in enumerate(zip(coords_shape, forces_shape)):
             if dim_c != dim_f:
                 raise ValueError(
-                    f"Coordinate and force dimensions must match, but did not on axis {dim_idx}"
+                    "Coordinate and force dimensions must match, "
+                    f"but did not on axis {dim_idx}"
                 )
         return True
 
