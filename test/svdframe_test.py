@@ -38,8 +38,8 @@ def test_svdframe_rotation_force_magnitude(
 def test_svdframe_rotation_no_op(aaqaa_coord_force_h5: SchemaH5, stride: int) -> None:
     """Test that rotation to SVD frame does not change things that are already rotated.
 
-    Something that already is in its SVD frame should not change (much) by reapplying the
-    rotation.
+    Something that already is in its SVD frame should not change (much) by reapplying
+    the rotation.
     Note that we could get the mirror image, so we need to compare absolute values.
     """
     rotate_window = RotateToSVDFrame(
