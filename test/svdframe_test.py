@@ -1,4 +1,4 @@
-"""Test RotateToSVDFrame"""
+"""Test RotateToSVDFrame."""
 
 from typing import Final
 from pathlib import Path
