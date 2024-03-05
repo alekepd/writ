@@ -25,9 +25,12 @@ ArrayNx3 = Annotated[npt.NDArray[DType], Literal["N", 3]]
 ArrayMxNx3 = Annotated[npt.NDArray[DType], Literal["M", "N", 3]]
 
 
-# TODO: write tests!
 class RotateToSVDFrame(Iterable[Sequence[A]]):
     """Provides an iterable that rotates a source configuration into its SVD-frame.
+
+    Warning:
+    --------
+    This class modifies the source iterate tuples in-place.
 
     This class returns rotated coords and forces by modifying the respective entries
     of the iterates in-place. The positions of the coordinates and forces in iterate
@@ -37,8 +40,8 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
     def __init__(
         self,
         source: Iterable[Sequence[A]],
-        coords_idx: int = 0,
-        forces_idx: int = 1,
+        coords_index: int = 0,
+        forces_index: int = 1,
         stride_for_svd: int = 1,
     ) -> None:
         """Initialize.
@@ -47,10 +50,10 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
         ---------
         source:
             Iterable of objects to iterate over
-        coords_idx: int
+        coords_index: int
             Index of the coordinates array in the tuples we iterate over,
             by default 0.
-        forces_idx: int
+        forces_index: int
             Index of the forces array in the tuples we iterate over,
             by default 1.
         stride_for_svd: int
@@ -61,8 +64,8 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
 
         """
         self.source = source
-        self.coords_idx = coords_idx
-        self.forces_idx = forces_idx
+        self.coords_index = coords_index
+        self.forces_index = forces_index
         self.stride_for_svd = stride_for_svd
 
     def _rotate(
@@ -108,17 +111,22 @@ class RotateToSVDFrame(Iterable[Sequence[A]]):
     ) -> TypeGuard[ArrayMxNx3]:
         coords_shape = coords_batch.shape
         forces_shape = forces_batch.shape
-        assert len(coords_shape) == 3
-        assert coords_shape[-1] == 3
-        for dim_c, dim_f in zip(coords_shape, forces_shape):
-            assert dim_c == dim_f
+        if len(coords_shape) != 3:
+            raise ValueError("Coordinates must be 3dimensional arrays.")
+        if coords_shape[-1] != 3:
+            raise ValueError("Coordinates space is expected to have 3 dimensions.")
+        for dim_idx, (dim_c, dim_f) in enumerate(zip(coords_shape, forces_shape)):
+            if dim_c != dim_f:
+                raise ValueError(
+                    f"Coordinate and force dimensions must match, but did not on axis {dim_idx}"
+                )
         return True
 
     def __iter__(self) -> Iterator[Sequence[A]]:
         """Iterate over input, returning rotated coords and forces."""
         for pull in self.source:
-            coords_batch = pull[self.coords_idx]
-            forces_batch = pull[self.forces_idx]
+            coords_batch = pull[self.coords_index]
+            forces_batch = pull[self.forces_index]
             if (
                 isinstance(coords_batch, np.ndarray)
                 and isinstance(forces_batch, np.ndarray)
