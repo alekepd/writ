@@ -97,7 +97,7 @@ def ihash(
     /,
     hasher: Callable[[T], int],
     order: bool = True,
-    seed: Optional[str] = 'ahakwvota2',
+    seed: Optional[str] = "ahakwvota2",
     **kwargs,
 ) -> int:
     """Hash an iterable of objects given a underlying hash function.
