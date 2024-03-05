@@ -11,8 +11,8 @@ from typing import (
     Sequence,
     Literal,
     Tuple,
-    TypeGuard,
 )
+from typing_extensions import TypeGuard
 
 import numpy as np
 import numpy.typing as npt
