@@ -91,15 +91,22 @@ def aaqaa_coord_h5_stride_2() -> SchemaH5:
 
 
 @pytest.mark.h5py
-def test_schemah5_read(aaqaa_coord_h5: SchemaH5) -> None:
+def test_schemah5_read(
+    aaqaa_coord_h5: SchemaH5, aaqaa_coord_force_h5: SchemaH5
+) -> None:
     """Test accuracy of basic single-array SchemaH5 reading.
 
-    Content hash is checked against saved value.
+    Content hash is checked against saved values and internal consistency.
     """
-    CORRECT_HASH: Final = 5588434593584076510
+    CORRECT_COORD_HASH: Final = 7643253581193118763
+    CORRECT_COORD_FORCE_HASH: Final = 10139346729638326161
     # the read entries are size one tuples, so we extract the array via [0]
-    content_hash = ihash((x[0] for x in aaqaa_coord_h5), hasher=arrhash, order=False)
-    assert CORRECT_HASH == content_hash
+    coord_content_hash = ihash(aaqaa_coord_h5, hasher=ghash, order=False)
+    assert CORRECT_COORD_HASH == coord_content_hash
+    # the read entries are size one tuples, so we extract the array via [0]
+    coord_force_content_hash = ihash(aaqaa_coord_force_h5, hasher=ghash, order=False)
+    assert CORRECT_COORD_FORCE_HASH == coord_force_content_hash
+    assert coord_content_hash != coord_force_content_hash
 
 
 @pytest.mark.h5py
