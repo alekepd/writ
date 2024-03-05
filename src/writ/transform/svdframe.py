@@ -28,7 +28,7 @@ ArrayMxNx3 = Annotated[npt.NDArray[DType], Literal["M", "N", 3]]
 class RotateToSVDFrame(Iterable[Sequence[A]]):
     """Provides an iterable that rotates a source configuration into its SVD-frame.
 
-    Warning
+    Warning:
     -------
     This class modifies the source iterate tuples in-place.
 
