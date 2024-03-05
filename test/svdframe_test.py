@@ -1,32 +1,10 @@
 """Test RotateToSVDFrame."""
 
-from typing import Final
-from pathlib import Path
 import pytest
 import numpy as np
 
 from writ.read import SchemaH5
 from writ.transform.svdframe import RotateToSVDFrame
-
-AAQAA_H5_PATH: Final = (
-    Path(__file__).parent / Path("data") / Path("aaqaa_stride_10000_9ramp.h5py")
-)
-AAQAA_COORD_KEY: Final = "coords"
-AAQAA_FORCE_KEY: Final = "Fs"
-
-
-@pytest.fixture
-def aaqaa_coord_force_h5() -> SchemaH5:
-    """Produce SchemaH5 of aaqaa.
-
-    Returns coord and force arrays in tuples, no ids.
-    """
-    return SchemaH5(
-        target=str(AAQAA_H5_PATH),
-        schema=[AAQAA_COORD_KEY, AAQAA_FORCE_KEY],
-        include_id=False,
-        singleton=False,
-    )
 
 
 @pytest.mark.h5py
