@@ -55,7 +55,7 @@ def aaqaa_coord_h5_singleton() -> SchemaH5:
     """
     return SchemaH5(
         target=str(AAQAA_H5_PATH),
-        schema=["coords"],
+        schema=[AAQAA_COORD_KEY],
         include_id=False,
         singleton=True,
     )
