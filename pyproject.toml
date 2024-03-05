@@ -87,4 +87,8 @@ warn_unused_ignores = true
 [tool.pytest.ini_options]
 minversion = "6.0"
 python_files = "*.py"
-testpaths = [ "src" ]
+testpaths = [ "test" ]
+markers = [
+    "h5py: needs h5py to run (deselect with '-m \"not slow\"')",
+]
+
