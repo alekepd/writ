@@ -98,13 +98,13 @@ def test_schemah5_read(
 
     Content hash is checked against saved values and internal consistency.
     """
-    CORRECT_COORD_HASH: Final = 7643253581193118763
-    CORRECT_COORD_FORCE_HASH: Final = 10139346729638326161
+    CORRECT_COORD_HASH: Final = 17177354416086495880
+    CORRECT_COORD_FORCE_HASH: Final = 13910756345033442274
     # the read entries are size one tuples, so we extract the array via [0]
-    coord_content_hash = ihash(aaqaa_coord_h5, hasher=ghash, order=False)
+    coord_content_hash = ihash(aaqaa_coord_h5, hasher=ghash, order=True)
     assert CORRECT_COORD_HASH == coord_content_hash
     # the read entries are size one tuples, so we extract the array via [0]
-    coord_force_content_hash = ihash(aaqaa_coord_force_h5, hasher=ghash, order=False)
+    coord_force_content_hash = ihash(aaqaa_coord_force_h5, hasher=ghash, order=True)
     assert CORRECT_COORD_FORCE_HASH == coord_force_content_hash
     assert coord_content_hash != coord_force_content_hash
 
@@ -119,10 +119,10 @@ def test_schemah5_strided_read(
     """
     # the read entries are size one tuples, so we extract the array via [0]
     strided_content_hash = ihash(
-        (x[0] for x in aaqaa_coord_h5_stride_2), hasher=arrhash, order=False
+        (x[0] for x in aaqaa_coord_h5_stride_2), hasher=arrhash, order=True
     )
     manual_strided_content_hash = ihash(
-        (x[0][::2] for x in aaqaa_coord_h5), hasher=arrhash, order=False
+        (x[0][::2] for x in aaqaa_coord_h5), hasher=arrhash, order=True
     )
     assert strided_content_hash == manual_strided_content_hash
 
@@ -133,10 +133,8 @@ def test_schemah5_ids(aaqaa_coord_h5_with_ids: SchemaH5) -> None:
 
     Hash is compared to saved value.
     """
-    CORRECT_HASH: Final = 11890363317478772579
-    content_hash = ihash(
-        (x for x in aaqaa_coord_h5_with_ids), hasher=ghash, order=False
-    )
+    CORRECT_HASH: Final = 16610446184277274991
+    content_hash = ihash((x for x in aaqaa_coord_h5_with_ids), hasher=ghash, order=True)
     assert CORRECT_HASH == content_hash
 
 
@@ -148,13 +146,11 @@ def test_schemah5_singleton(
 
     Hash is compared to saved value and output of reading without id.
     """
-    CORRECT_HASH: Final = 5588434593584076510
+    CORRECT_HASH: Final = 5128426097335556466
     # the read entries are size one tuples, so we extract the array via [0]
     content_hash = ihash(
-        (x for x in aaqaa_coord_h5_singleton), hasher=arrhash, order=False  # type: ignore
+        (x for x in aaqaa_coord_h5_singleton), hasher=arrhash, order=True  # type: ignore
     )
     assert CORRECT_HASH == content_hash
-    nos_content_hash = ihash(
-        (x[0] for x in aaqaa_coord_h5), hasher=arrhash, order=False
-    )
+    nos_content_hash = ihash((x[0] for x in aaqaa_coord_h5), hasher=arrhash, order=True)
     assert nos_content_hash == content_hash
