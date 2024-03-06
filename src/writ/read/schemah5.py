@@ -281,7 +281,7 @@ class SchemaH5(Iterable):
             self.dataset = target
             self.responsible = False
 
-        self.anchors = data_anchors(self.dataset, separator=self.SEPARATOR)
+        self.anchors = sorted(data_anchors(self.dataset, separator=self.SEPARATOR))
 
     @cached_property
     def kinds(self) -> Set[FrozenSet]:
